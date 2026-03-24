@@ -5,7 +5,7 @@
 .auth-page {
     min-height: calc(100vh - var(--nav-h));
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
 }
 
 /* ---- LEFT PANEL ---- */
