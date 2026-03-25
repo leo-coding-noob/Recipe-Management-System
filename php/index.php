@@ -9,7 +9,7 @@ $category_filter = isset($_GET['category']) ? $conn->real_escape_string($_GET['c
 $search_query    = isset($_GET['q'])        ? $conn->real_escape_string($_GET['q'])        : '';
 
 // Pagination
-$per_page     = 30;
+$per_page     = 9;
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset       = ($current_page - 1) * $per_page;
 
@@ -22,6 +22,8 @@ if ($search_query)    $where .= " AND (r.title LIKE '%$search_query%' OR r.ingre
 $total_result = $conn->query("SELECT COUNT(*) as c FROM recipes r $where");
 $total_recipes = $total_result->fetch_assoc()['c'];
 $total_pages   = ceil($total_recipes / $per_page);
+
+
 
 // Fetch recipes with author name
 $sql = "SELECT r.*, u.username as author
