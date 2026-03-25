@@ -9,7 +9,7 @@ $category_filter = isset($_GET['category']) ? $conn->real_escape_string($_GET['c
 $search_query    = isset($_GET['q'])        ? $conn->real_escape_string($_GET['q'])        : '';
 
 // Pagination
-$per_page     = 9;
+$per_page     = 1;
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset       = ($current_page - 1) * $per_page;
 
