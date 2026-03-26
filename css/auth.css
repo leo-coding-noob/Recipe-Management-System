@@ -3,7 +3,7 @@
    ============================================================ */
 
 .auth-page {
-    min-height: calc(100vh - var(--nav-h));
+    min-height: calc(101vh - var(--nav-h));
     display: grid;
     grid-template-columns: 1fr 1fr;
 }
