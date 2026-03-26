@@ -52,6 +52,7 @@ include 'header.php';
             <input type="text" name="q" placeholder="Search recipes, ingredients…" value="<?= htmlspecialchars($search_query) ?>">
             <button type="submit">Search</button>
         </form>
+        
     </div>
     <div class="hero-graphic">
         <div class="hero-blob">

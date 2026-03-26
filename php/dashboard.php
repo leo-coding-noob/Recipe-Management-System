@@ -66,7 +66,7 @@ include 'header.php';
         <nav class="sidebar-nav">
             <a href="dashboard.php" class="slink active"><span class="slink-icon">◈</span> Dashboard</a>
             <a href="index.php"     class="slink"><span class="slink-icon">◉</span> Browse All</a>
-            <a href="index.php?my=1" class="slink"><span class="slink-icon">◎</span> My Recipes</a>
+            <a href="myrecipes.php" class="slink"><span class="slink-icon">◎</span> My Recipes</a>
             <a href="add.php"       class="slink"><span class="slink-icon">✦</span> Add Recipe</a>
             <a href="favorites.php" class="slink"><span class="slink-icon">♡</span> Favorites</a>
         </nav>

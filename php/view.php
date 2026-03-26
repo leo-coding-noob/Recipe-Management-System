@@ -8,6 +8,20 @@ include 'config.php';
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$id) { header("Location: index.php"); exit; }
 
+// Delete comment
+if (isset($_GET['delete_comment']) && isset($_SESSION['user_id'])) {
+    $cid = intval($_GET['delete_comment']);
+    $check = $conn->query("SELECT user_id FROM comments WHERE id=$cid");
+    if ($check->num_rows > 0) {
+        $row_c = $check->fetch_assoc();
+        if ($row_c['user_id'] == $_SESSION['user_id'] || ($_SESSION['is_admin'] ?? 0) == 1) {
+            $conn->query("DELETE FROM comments WHERE id=$cid");
+        }
+    }
+    header("Location: view.php?id=$id#comments");
+    exit;
+}
+
 $result = $conn->query("SELECT r.*, u.username as author FROM recipes r JOIN users u ON r.user_id=u.id WHERE r.id=$id");
 if ($result->num_rows === 0) { header("Location: index.php"); exit; }
 $row = $result->fetch_assoc();
@@ -24,6 +38,17 @@ if (isset($_SESSION['user_id'])) {
 $cat_e   = $conn->real_escape_string($row['category']);
 $related = $conn->query("SELECT r.*, u.username as author FROM recipes r JOIN users u ON r.user_id=u.id
                           WHERE r.category='$cat_e' AND r.id != $id ORDER BY RAND() LIMIT 3");
+
+// Handle new comment
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['comment']) && isset($_SESSION['user_id'])) {
+    $comment = $conn->real_escape_string(trim($_POST['comment']));
+    if ($comment !== '') {
+        $uid = $_SESSION['user_id'];
+        $conn->query("INSERT INTO comments (recipe_id, user_id, comment) VALUES ($id, $uid, '$comment')");
+        header("Location: view.php?id=$id#comments");
+        exit;
+    }
+}
 
 $page_title = htmlspecialchars($row['title']) . " — RecipeNest";
 $extra_css  = ['view'];
@@ -64,6 +89,7 @@ include 'header.php';
                         data-id="<?= $id ?>">
                     <?= $is_fav ? '⭐ Saved' : '♡ Save' ?>
                 </button>
+                
                 <?php if ($_SESSION['user_id'] == $row['user_id']): ?>
                     <a href="edit.php?id=<?= $id ?>" class="btn-outline-sm">✏ Edit</a>
                     <a href="delete.php?id=<?= $id ?>" class="btn-danger-sm"
@@ -136,6 +162,50 @@ include 'header.php';
     </div>
 </article>
 
+<!-- COMMENTS SECTION -->
+<section class="comments-section" id="comments">
+    <style>
+.comment-box { border:1px solid #ddd; padding:10px; margin-bottom:10px; border-radius:6px; }
+.comment-meta { font-size:0.85em; color:#555; margin-bottom:5px; }
+.comment-text { color:#333; }
+.comment-form textarea { width:100%; padding:6px; border-radius:5px; border:1px solid #ccc; margin-bottom:5px; }
+.comment-form button { padding:6px 12px; border:none; border-radius:5px; background:#6c63ff; color:#fff; cursor:pointer; }
+.comment-form button:hover { background:#574fcf; }
+.login-comment-btn { background:#6c63ff; color:#fff; padding:5px 10px; border-radius:5px; text-decoration:none; }
+.login-comment-btn:hover { background:#574fcf; }
+</style>
+    <h2>💬 Comments</h2>
+
+    <?php if (isset($_SESSION['user_id'])): ?>
+    <form method="POST" class="comment-form">
+        <textarea name="comment" placeholder="Write your comment..." required></textarea>
+        <button type="submit">Post Comment</button>
+    </form>
+    <?php else: ?>
+        <p>Login to write a comment.</p>
+    <?php endif; ?>
+
+    <?php
+    $comments = $conn->query("SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id=u.id WHERE c.recipe_id=$id ORDER BY c.created_at DESC");
+    if ($comments->num_rows === 0): ?>
+        <p>No comments yet. Be the first to comment!</p>
+    <?php else: ?>
+        <ul class="comments-list">
+            <?php while ($c = $comments->fetch_assoc()): ?>
+                <li>
+                    <strong><?= htmlspecialchars($c['username']) ?></strong> <span class="comment-date"><?= date('M j, Y H:i', strtotime($c['created_at'])) ?></span>
+                    <p><?= nl2br(htmlspecialchars($c['comment'])) ?></p>
+                    <?php if (isset($_SESSION['user_id']) && ($_SESSION['user_id'] == $c['user_id'] || ($_SESSION['is_admin'] ?? 0) == 1)): ?>
+                        <a href="view.php?id=<?= $id ?>&delete_comment=<?= $c['id'] ?>"
+                           onclick="return confirm('Delete this comment?')"
+                           class="delete-comment">🗑 Delete</a>
+                    <?php endif; ?>
+                </li>
+            <?php endwhile; ?>
+        </ul>
+    <?php endif; ?>
+</section>
+
 <!-- RELATED RECIPES -->
 <?php if ($related->num_rows > 0): ?>
 <section class="related-section">
@@ -159,3 +229,15 @@ include 'header.php';
 <?php endif; ?>
 
 <?php include 'footer.php'; ?>
+<script>
+window.addEventListener('load', () => {
+    if (window.location.hash === '#comments') {
+        const el = document.getElementById('comments');
+        if (el) {
+            const yOffset = -10; // adjust if needed
+            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    }
+});
+</script>
