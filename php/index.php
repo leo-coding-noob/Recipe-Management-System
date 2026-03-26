@@ -151,16 +151,73 @@ include 'header.php';
 
     <!-- PAGINATION -->
     <?php if ($total_pages > 1): ?>
+    <style>
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 40px 0 20px;
+            flex-wrap: wrap;
+        }
+        .page-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            height: 42px;
+            padding: 0 14px;
+            border-radius: 10px;
+            border: 1.5px solid #e2e0f0;
+            background: #fff;
+            color: #444;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .page-btn:hover {
+            border-color: #6c63ff;
+            color: #6c63ff;
+            background: #f4f3ff;
+        }
+        .page-btn.active {
+            background: #6c63ff;
+            color: #fff;
+            border-color: #6c63ff;
+            font-weight: 600;
+        }
+        .page-btn.prev-next {
+            padding: 0 18px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+        .page-info {
+            font-size: 13px;
+            color: #888;
+            margin: 0 8px;
+            font-family: 'DM Sans', sans-serif;
+        }
+    </style>
     <div class="pagination">
         <?php if ($current_page > 1): ?>
-            <a href="?page=<?= $current_page - 1 ?><?= $category_filter ? '&category='.urlencode($category_filter) : '' ?><?= $search_query ? '&q='.urlencode($search_query) : '' ?>" class="page-btn">← Prev</a>
+            <a href="?page=<?= $current_page - 1 ?><?= $category_filter ? '&category='.urlencode($category_filter) : '' ?><?= $search_query ? '&q='.urlencode($search_query) : '' ?>" class="page-btn prev-next">← Prev</a>
+        <?php else: ?>
+            <span class="page-btn prev-next" style="opacity:0.35;cursor:default;pointer-events:none">← Prev</span>
         <?php endif; ?>
+
         <?php for ($p = 1; $p <= $total_pages; $p++): ?>
             <a href="?page=<?= $p ?><?= $category_filter ? '&category='.urlencode($category_filter) : '' ?><?= $search_query ? '&q='.urlencode($search_query) : '' ?>"
                class="page-btn <?= $p === $current_page ? 'active' : '' ?>"><?= $p ?></a>
         <?php endfor; ?>
+
+        <span class="page-info">Page <?= $current_page ?> of <?= $total_pages ?></span>
+
         <?php if ($current_page < $total_pages): ?>
-            <a href="?page=<?= $current_page + 1 ?><?= $category_filter ? '&category='.urlencode($category_filter) : '' ?><?= $search_query ? '&q='.urlencode($search_query) : '' ?>" class="page-btn">Next →</a>
+            <a href="?page=<?= $current_page + 1 ?><?= $category_filter ? '&category='.urlencode($category_filter) : '' ?><?= $search_query ? '&q='.urlencode($search_query) : '' ?>" class="page-btn prev-next">Next →</a>
+        <?php else: ?>
+            <span class="page-btn prev-next" style="opacity:0.35;cursor:default;pointer-events:none">Next →</span>
         <?php endif; ?>
     </div>
     <?php endif; ?>

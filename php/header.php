@@ -30,6 +30,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <a href="../php/index.php" class="nav-link <?= $current_page === 'index.php' ? 'active' : '' ?>">Browse</a>
 
         <?php if (isset($_SESSION['user_id'])): ?>
+            <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+        <a href="../php/admin.php" class="nav-btn" style="background:#e74c3c;">👑 Admin</a>
+    <?php endif; ?>
             <a href="../php/dashboard.php" class="nav-link <?= $current_page === 'dashboard.php' ? 'active' : '' ?>">Dashboard</a>
             <a href="../php/add.php" class="nav-btn">+ Add Recipe</a>
             <div class="nav-avatar" onclick="toggleDropdown()" title="<?= htmlspecialchars($_SESSION['username']) ?>">
@@ -54,6 +57,10 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="mobile-menu" id="mobileMenu">
     <a href="../php/index.php">Browse Recipes</a>
     <?php if (isset($_SESSION['user_id'])): ?>
+       <?php if (isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1): ?>
+    <a href="../php/admin.php" class="admin-btn">👑 Admin Panel</a>
+<?php endif; ?>
+
         <a href="../php/dashboard.php">Dashboard</a>
         <a href="../php/add.php">Add Recipe</a>
         <a href="../php/logout.php">Logout</a>

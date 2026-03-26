@@ -151,24 +151,23 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// ---- SEARCH DEBOUNCE (homepage live search) ----
-(function () {
-    const searchInput = document.getElementById('searchInput') || document.querySelector('.hero-search input');
-    if (!searchInput) return;
 
-    let debounceTimer;
-    searchInput.addEventListener('input', function () {
+// ---- LIVE SEARCH (triggers on every keystroke, no Enter needed) ----
+document.addEventListener("DOMContentLoaded", function () {
+    var searchInput = document.querySelector(".hero-search input[name=\"q\"]");
+    if (!searchInput) return;
+    var debounceTimer;
+    searchInput.addEventListener("input", function () {
         clearTimeout(debounceTimer);
-        const val = this.value.trim();
-        debounceTimer = setTimeout(() => {
-            if (val.length === 0 || val.length >= 2) {
-                // Submit the search form
-                const form = this.closest('form');
-                if (form) form.submit();
-            }
-        }, 600);
+        var self = this;
+        debounceTimer = setTimeout(function () {
+            self.closest("form").submit();
+        }, 350);
     });
-})();
+    searchInput.addEventListener("search", function () {
+        this.closest("form").submit();
+    });
+});
 
 // ---- CONFIRM DELETE ----
 document.addEventListener('DOMContentLoaded', function () {

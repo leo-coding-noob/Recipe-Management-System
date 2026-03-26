@@ -372,3 +372,19 @@ input, textarea, select {
     .mobile-menu-btn { display: flex; }
     .footer-inner { grid-template-columns: 1fr; gap: 28px; }
 }
+/* Mobile menu admin button styling */
+.mobile-menu a.admin-btn {
+    display: block;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.mobile-menu a.admin-btn:hover {
+    background-color: #c0392b;
+}
