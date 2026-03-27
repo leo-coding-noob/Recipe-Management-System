@@ -28,7 +28,7 @@ include 'header.php';
 ?>
 
 <div class="admin-page">
-    <h1>👑 Admin Panel</h1>
+    <h1> Admin Panel</h1>
 
     <?php if (isset($_GET['deleted'])): ?>
         <div class="alert-success">✅ Recipe deleted successfully</div>
